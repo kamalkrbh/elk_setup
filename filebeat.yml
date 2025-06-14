@@ -1,0 +1,21 @@
+filebeat.inputs:
+- type: filestream
+  enabled: true
+  paths:
+    - /log/*.log
+    # Add other paths you want to monitor
+
+# filebeat.config.modules:
+#   path: ${path.config}/modules.d/*.yml
+#   reload.enabled: true
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+
+setup.kibana:
+  host: "http://kibana:5601"
+
+# setup.dashboards.enabled: true	
+
+# logging.to_files: false
+# logging.to_stdout: true
