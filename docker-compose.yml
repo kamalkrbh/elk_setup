@@ -39,7 +39,6 @@ services:
     volumes:
       - ./log:/log:ro
 
-
     depends_on:
       elasticsearch:
         condition: service_healthy
