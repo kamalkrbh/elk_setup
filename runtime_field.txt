@@ -1,0 +1,69 @@
+------ log_level --------------
+type-Keyword
+ 
+if (params._source.containsKey('message')) {
+  String msg = params._source.message;
+  def matcher = /\[(INFO|DEBUG|ERROR|CRITICAL|WARNING)\]/.matcher(msg);
+  if (matcher.find()) {
+    emit(matcher.group(1));
+  }
+}
+
+--------- CPU Usage ----------
+Double
+
+if (params._source.containsKey('message')) {
+  String msg = params._source.message;
+  // Regex to capture the number between "metric_cpu_usage=" and "%"
+  def pattern = /metric_cpu_usage=([0-9.]+)\%/;
+  def matcher = pattern.matcher(msg);
+  if (matcher.find()) {
+    // Parse the captured group (the number) as a Double
+    emit(Double.parseDouble(matcher.group(1)));
+  }
+}
+
+-------------- Memory Usage ----------
+Double
+
+if (params._source.containsKey('message')) {
+  String msg = params._source.message;
+  // Regex to capture the number between "metric_memory_mb=" and "MB"
+  def pattern = /metric_memory_mb=([0-9.]+)MB/;
+  def matcher = pattern.matcher(msg);
+  if (matcher.find()) {
+    // Parse the captured group (the number) as a Double
+    emit(Double.parseDouble(matcher.group(1)));
+  }
+}
+
+-------------- Response Time ----------
+Double
+
+if (params._source.containsKey('message')) {
+  String msg = params._source.message;
+  // Regex to capture the number between "metric_response_time_ms=" and "ms"
+  def pattern = /metric_response_time_ms=([0-9.]+)ms/;
+  def matcher = pattern.matcher(msg);
+  if (matcher.find()) {
+    // Parse the captured group (the number) as a Double
+    emit(Double.parseDouble(matcher.group(1)));
+  }
+}
+
+-------------- Timestamp ----------
+Date
+
+if (params._source.containsKey('message')) {
+  String msg = params._source.message;
+  // Regex to capture the timestamp at the beginning of the log message
+  def pattern = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6})/;
+  def matcher = pattern.matcher(msg);
+  if (matcher.find()) {
+    String timestampStr = matcher.group(1);
+    // Parse the captured timestamp string into an Instant object
+    java.time.Instant instant = java.time.Instant.parse(timestampStr + 'Z');
+    // Convert the Instant to milliseconds since epoch and emit as a long
+    emit(instant.toEpochMilli());
+  }
+}

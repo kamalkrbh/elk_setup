@@ -3,7 +3,6 @@ filebeat.inputs:
   enabled: true
   paths:
     - /log/*.log
-    - /var/log/*.log
 
 output.elasticsearch:
   hosts: ["http://elasticsearch:9200"]
